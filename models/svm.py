@@ -70,11 +70,15 @@ def main():
 
         svc = svm.SVC(kernel='poly').fit(X_train, y_train)
 
+        
         predicted_linear = svc.predict(X_test)
-        print(predicted_linear)
-        print(y_test)
-        predicted_linear.sort()
-        y_test.sort()
+        result = list(zip(y_test, predicted_linear))
+        
+        result.sort()
+
+        y_test = [x for (x,y) in result]
+        predicted_linear = [y for (x,y) in result]
+        
         plt.figure()
         plt.scatter(np.arange(1,np.size(y_test) + 1),predicted_linear,label ="Predicted Fantasy Points")
         plt.scatter(np.arange(1,np.size(y_test) + 1),y_test,label = "Actual Fantasy Points")

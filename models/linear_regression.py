@@ -167,8 +167,14 @@ def main():
     pred = np.dot(X_test, w)
 
     plt.figure()
-    pred.sort()
-    y_test.sort()
+    
+    
+    result = list(zip(y_test, pred))
+    
+    result.sort()
+
+    y_test = [x for (x,y) in result]
+    pred = [y for (x,y) in result]
     plt.scatter(np.arange(1,np.size(y_test) + 1),pred,label ="Predicted Fantasy Points")
     plt.scatter(np.arange(1,np.size(y_test) + 1),y_test,label = "Actual Fantasy Points")
     plt.legend()
