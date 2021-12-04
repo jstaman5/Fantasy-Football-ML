@@ -1,5 +1,7 @@
 #SVM
 
+from numpy.linalg import norm
+from numpy.random import normal
 import pandas as pd
 import numpy as np
 import pylab as pl
@@ -18,7 +20,7 @@ def normalizeData(data):
 
 def main():
     
-    position_csv = ["/QBs.csv", "/TEs.csv", "/WRs.csv"]
+    position_csv = ["/QBs.csv", "/TEs.csv", "/WRs.csv","/RBs.csv"]
 
     data_dir = os.path.abspath(os.path.dirname(__file__)) + "/../data"
     
@@ -63,6 +65,21 @@ def main():
 
             X = np.array([ np.ones(shape = targets.shape), targets, fd, ybc, yac, adot, bt, dp, picks, qbr], dtype=np.float32).T
             plt_pos = "WR"
+        
+        elif pos == '/RBs.csv':
+            rushing_attempts = normalizeData(data['rushing_att'].values)
+            first_down_rush = normalizeData(data['1st_down_rush'].values)
+            longest_rushing_attempt = normalizeData(data['longest_rushing_att'].values)
+            rushing_yds_per_att = normalizeData(data['rushing_yds/att'].values)
+            pass_target = normalizeData(data['pass_target'].values)
+            receptions = normalizeData(data['receptions'].values)
+            first_down_recieve = normalizeData(data['1d_rec'].values)
+            rec_yds_per_target = normalizeData(data['rec_yds/tgt'].values)
+
+            X = np.array([ np.ones(shape = rec_yds_per_target.shape), rushing_attempts, first_down_rush,longest_rushing_attempt\
+                , rushing_yds_per_att, pass_target, receptions, first_down_recieve, rec_yds_per_target], dtype=np.float32).T
+            
+            plt_pos = "RB"
 
         y = np.array(fantasy_points)
 
