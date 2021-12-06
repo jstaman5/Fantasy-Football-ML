@@ -13,17 +13,27 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
+import seaborn as sbn
 import os
 
 def normalizeData(data):
         return  (data-np.min(data)) / (np.max(data) - np.min(data))
+    
+def r2(y, y_pred):
+    mean_y = np.mean(y)
+    ss_res = np.sum(np.square(y-y_pred))
+    ss_tot = np.sum(np.square(y-mean_y))
+    return 1 - (ss_res / ss_tot)
 
 def main():
-    
+    sbn.set()
     position_csv = ["/QBs.csv", "/TEs.csv", "/WRs.csv","/RBs.csv"]
 
     data_dir = os.path.abspath(os.path.dirname(__file__)) + "/../data"
     
+    print(" Position       R2")
+    print("----------    -------")
+
     for pos in position_csv:
         data = pd.read_csv(data_dir + pos, sep=',')
         
@@ -95,11 +105,14 @@ def main():
 
         y_test = [x for (x,y) in result]
         predicted_linear = [y for (x,y) in result]
-        
+
+        # print('R-squared value for {}: {}'.format(plt_pos, r2(np.array(y_test), np.array(predicted_linear))))
+        print("    {}{:>15.5f}".format(plt_pos, r2(np.array(y_test), np.array(predicted_linear))))
+
         plt.figure()
         plt.scatter(np.arange(1,np.size(y_test) + 1),predicted_linear,label ="Predicted Fantasy Points")
         plt.scatter(np.arange(1,np.size(y_test) + 1),y_test,label = "Actual Fantasy Points")
-        #plt.legend()
+        plt.legend()
         plt.ylabel("Fantasy Points")
         plt.xlabel(plt_pos)
         plt.title("Scatter Plot of Estimated and Actual Fantasy Points for Each {}".format(plt_pos))
