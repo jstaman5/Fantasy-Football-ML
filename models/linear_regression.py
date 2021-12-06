@@ -116,7 +116,7 @@ def main():
             rec_yds_per_target = normalizeData(data['rec_yds/tgt'].values)
 
             X = np.array([ np.ones(shape = rec_yds_per_target.shape), rushing_attempts, first_down_rush,longest_rushing_attempt\
-                , rushing_yds_per_att, pass_target], dtype=np.float32).T
+                , rushing_yds_per_att, pass_target, first_down_recieve], dtype=np.float32).T
             
             plt_pos = "RB"
 
@@ -176,42 +176,12 @@ def main():
                         besteps = eps
                 
                 #plots iteration vs beta values for each eta
-                '''fig, ax = plt.subplots(1,2)
-                width = .25
-                labels = ['0.0','0.0','0.01','0.05','0.1','0.5','1.0']
-                x = np.arange(6)
-                fig.suptitle("Eta = {}   epsilon = {}".format(eta,eps))
-                ax[0].scatter(beta_values,iters)
-                ax[0].set_title("Iterations vs Beta Values")
-                ax[0].set_xlabel("Beta Values")
-                ax[0].set_ylabel("Iterations")
-                
-                #plots MSE vs beta for each eta
-                ax[1].set_title("MSE Minimization Results vs Beta Values")
-                rects1 = ax[1].bar(x-width,dataFidelity,width,label = "Fidelity")
-                rects2 = ax[1].bar(x,modelTerm, width, label = "Model")
-                rects3 = ax[1].bar(x +width, sum, width, label = "Sum")
-                ax[1].set_xticklabels(labels)
-                ax[1].set_xlabel("Beta Values")
-                ax[1].set_ylabel("MSE Units")
-                ax[1].legend()
-                plt.show()'''
+
 
         print(bestEta,bestBeta,besteps,bestR2)
 
         #plot for max weight vector difference vs iterations
-        '''w,wchange, k = gd(X_train, y_train,.1 ,1.0)
 
-
-        plt.figure()
-        plt.scatter(np.arange(1,k+ 2),wchange)
-        plt.suptitle("Eta = {}   Beta = {}".format(.1,1.0))
-        plt.title("Max Weight Difference vs Iterations")
-        plt.ylabel("Max Weight Vectir Difference")
-        plt.xlabel("Iterations")
-        plt.ylim([-.05,2])
-        
-        plt.show()'''
 
         # select eta and beta, retrain and run test data
         w,wchange, k = gd(X_train, y_train, bestEta,bestBeta)
@@ -222,7 +192,7 @@ def main():
         
         
         result = list(zip(y_test, pred))
-        
+        print(result)
         result.sort()
 
         y_test = [x for (x,y) in result]
