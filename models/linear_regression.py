@@ -63,6 +63,8 @@ def main():
     # read data from file, produce related info and plots
     data_dir = os.path.abspath(os.path.dirname(__file__)) + "/../data"
 
+
+    #loop through different positions
     for pos in position_csv:
         data = pd.read_csv(data_dir + pos, sep=',')
         
@@ -124,6 +126,7 @@ def main():
 
 
         info = data.describe()
+        print("{}".format(plt_pos))
         print(info)
         
         sbn.heatmap(data.corr()) #-- use show data.corr() output
@@ -175,28 +178,28 @@ def main():
                         bestBeta = beta
                         besteps = eps
                 
-                #plots iteration vs beta values for each eta
 
 
-        print(bestEta,bestBeta,besteps,bestR2)
+        #print(bestEta,bestBeta,besteps,bestR2)
+        print("{}".format(plt_pos) + " R2 score:   {}".format(bestR2))
 
-        #plot for max weight vector difference vs iterations
 
 
         # select eta and beta, retrain and run test data
         w,wchange, k = gd(X_train, y_train, bestEta,bestBeta)
-        print(w)
+        print("{}".format(plt_pos) + " end weight values:  {}\n".format(w))
         pred = np.dot(X_test, w)
 
         plt.figure()
         
-        
+        #sorts predicted and actual both based on the actual
+        #helps with how the output graph looks, making it easier to read
         result = list(zip(y_test, pred))
-        print(result)
         result.sort()
-
         y_test = [x for (x,y) in result]
         pred = [y for (x,y) in result]
+
+        # *********** Plotting ************
         plt.scatter(np.arange(1,np.size(y_test) + 1),pred,label ="Predicted Fantasy Points")
         plt.scatter(np.arange(1,np.size(y_test) + 1),y_test,label = "Actual Fantasy Points")
         plt.legend()
@@ -206,4 +209,5 @@ def main():
 
         plt.show()
 
-main()
+if __name__ == "__main__":
+    main()

@@ -16,9 +16,11 @@ import matplotlib.pyplot as plt
 import seaborn as sbn
 import os
 
+#normalizes data so it is between 0 and 1
 def normalizeData(data):
         return  (data-np.min(data)) / (np.max(data) - np.min(data))
-    
+
+#calculate r2 score
 def r2(y, y_pred):
     mean_y = np.mean(y)
     ss_res = np.sum(np.square(y-y_pred))
@@ -34,12 +36,15 @@ def main():
     print(" Position       R2")
     print("----------    -------")
 
+    #loop through different csv files
     for pos in position_csv:
         data = pd.read_csv(data_dir + pos, sep=',')
         
+        #get rid of unnecessary columns
         data = data.drop(['Player', 'Year'], axis = 1)
         data = data.apply(LabelEncoder().fit_transform)
-
+        
+        #target data is fantasy points
         fantasy_points = data['FantasyPoints'].values
 
         if pos == "/QBs.csv":
@@ -49,7 +54,7 @@ def main():
             sacks = normalizeData(data['Sacks'].values)
             nfl_rating = normalizeData(data['Rating'].values)
 
-            X = np.array([ np.ones(shape = age.shape),age, comp, yard_att, sacks,nfl_rating ], dtype=np.float32).T
+            X = np.array([ np.ones(shape = age.shape), age, comp, yard_att, sacks,nfl_rating ], dtype=np.float32).T
             plt_pos = "QB"
 
         elif pos == "/TEs.csv":
@@ -93,20 +98,22 @@ def main():
 
         y = np.array(fantasy_points)
 
+        #split data into train and test
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
 
+        #SVM model here, poly was best performing hyperparameter
         svc = svm.SVC(kernel='poly').fit(X_train, y_train)
 
-        
+        #this sorts the predicted and actual both based on the actual
+        #helps with how the output graph looks, making it easier to read
         predicted_linear = svc.predict(X_test)
         result = list(zip(y_test, predicted_linear))
-        
         result.sort()
-
         y_test = [x for (x,y) in result]
         predicted_linear = [y for (x,y) in result]
 
-        # print('R-squared value for {}: {}'.format(plt_pos, r2(np.array(y_test), np.array(predicted_linear))))
+
+        # ********* Plotting **************
         print("    {}{:>15.5f}".format(plt_pos, r2(np.array(y_test), np.array(predicted_linear))))
 
         plt.figure()
