@@ -17,6 +17,18 @@ Wide receivers: targets, first downs, yards before catch, yards after catch, ave
 
 Tight ends: snap percentage, targets, target share, catch percentage, 40-yard dash time
 
+## Results
+
+The R2 score is a goodness-of-fit measure machine learning models. The closer it is to 1 the more accurate the model is.
+Overall, we were pretty happy with the results. All of the data performed well except for the quarterbacks. Reasons for this include fantasy scores increasing over the years for quarterbacks due to more efficient offenses and more penalties protecting the quarterback. Also, we only looked at 5 statistics for QB that may not have a high correlation with fantasy performance.
+
+| Position | Linear Regression R2 | SVM R2 |
+| ---- | ----- | ----- |
+| Quarterback | 0.70253 | 0.50346 |
+| Running Back | 0.91174 | 0.77020 |
+| Wide Receiver | 0.90493 | 0.85447 |
+| Tight End | 0.87705 | 0.73133 |
+
 ## How to run models
 Make sure you are in the /models directory.
 Then type either 
